@@ -285,7 +285,7 @@ body {
   color: var(--color-text-on-brand);
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
-  padding: 56px var(--spacing-lg) 0;
+  padding: 56px var(--spacing-lg) 0 calc(var(--spacing-lg) + (1 - var(--p)) * var(--spacing-lg));
   overflow: hidden;
   touch-action: none;
   cursor: grab;
@@ -317,9 +317,13 @@ body {
 .welcome-title {
   margin: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-right: var(--spacing-lg);
   font-weight: 600;
-  font-size: calc(var(--text-title-size) + (1 - var(--p)) * 16px);
-  line-height: calc(var(--text-title-line) + (1 - var(--p)) * 18px);
+  margin-top: calc((1 - var(--p)) * 176px);
+  letter-spacing: calc((1 - var(--p)) * -0.02em);
+  font-size: calc(var(--text-title-size) + (1 - var(--p)) * (var(--text-display-size) - var(--text-title-size)));
+  line-height: calc(var(--text-title-line) + (1 - var(--p)) * (var(--text-display-line) - var(--text-title-line)));
 }
 
 .welcome-title:focus {
@@ -339,7 +343,8 @@ body {
 }
 
 .welcome-status {
-  margin: var(--spacing-sm) 0 0;
+  margin: var(--spacing-xl) 0 0;
+  max-width: 200px;
   opacity: max(0, calc(1 - var(--p) * 3));
 }
 
@@ -377,6 +382,12 @@ textarea:focus-visible,
 select:focus-visible {
   outline: 2px solid var(--color-bg-brand);
   outline-offset: 2px;
+}
+
+.welcome-cta svg {
+  width: 44px;
+  height: 56px;
+  margin-bottom: var(--spacing-xs);
 }
 
 .welcome-cta:focus-visible {

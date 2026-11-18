@@ -36,8 +36,8 @@
 
   /* Typography (Figma text styles) */
   --font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --text-display-size: 44px;
-  --text-display-line: 52px;
+  --text-display-size: 68px;
+  --text-display-line: 64px;
   --text-title-size: 28px;
   --text-title-line: 34px;
   --text-heading-size: 20px;

@@ -4,12 +4,7 @@
 const STORAGE_KEY = "job-tracker-v2";
 const STATUSES = ["Applied", "Interview", "Offer", "Rejected"];
 
-const SEED = [
-  { id: "wit", role: "AI-Assisted UI/UX Designer", company: "WIT Software", meta: "Applied on 18 Nov", appliedOn: "18 Nov 2026", status: "Applied", notes: "Finish the Figma case study and send the link", link: "" },
-  { id: "northwind", role: "Learning Experience Designer", company: "Northwind Learning", meta: "Interview on 25 Nov", appliedOn: "10 Nov 2026", status: "Interview", notes: "Interview on 25 Nov. Prepare two examples of learning content", link: "" },
-  { id: "brightpath", role: "Content Designer", company: "Brightpath", meta: "Offer received 16 Nov", appliedOn: "5 Nov 2026", status: "Offer", notes: "Offer received on 16 Nov. Reply by Friday", link: "" },
-  { id: "atlas", role: "Localization Specialist", company: "Atlas Games", meta: "Closed on 10 Nov", appliedOn: "28 Oct 2026", status: "Rejected", notes: "Closed on 10 Nov. Ask for feedback", link: "" }
-];
+const SEED = [];
 
 function isValidApp(a) {
   return a && typeof a.id === "string" && typeof a.role === "string" && typeof a.company === "string" && STATUSES.includes(a.status);
@@ -90,6 +85,7 @@ function isHttpUrl(value) {
 }
 
 function summaryText() {
+  if (applications.length === 0) return "No applications yet";
   const active = applications.filter((a) => a.status === "Applied" || a.status === "Interview").length;
   const interviews = applications.filter((a) => a.status === "Interview").length;
   return active + " active application" + (active === 1 ? "" : "s") + ", " + interviews + " interview" + (interviews === 1 ? "" : "s");
@@ -244,18 +240,37 @@ function newView() {
 
 /* ---------- Welcome: the blue cover shrinks into the list header ---------- */
 const root = document.getElementById("app");
+const STARTED_KEY = "job-tracker-started";
+
+/* On the very first launch the swipe on the welcome cover leads to
+   the New application screen instead of the (empty) list. */
+function isFirstLaunch() {
+  try {
+    return !localStorage.getItem(STARTED_KEY);
+  } catch (e) {
+    return false;
+  }
+}
+
+function markStarted() {
+  try {
+    localStorage.setItem(STARTED_KEY, "1");
+  } catch (e) { /* ignore */ }
+}
+
+let firstLaunch = isFirstLaunch();
 let welcomeOpen = !location.hash;
 let skipFade = false;
 
 function createWelcome() {
   const HEADER_H = 106;
   const hello = el("span", { class: "welcome-t welcome-t-hello", text: "Hello there!" });
-  const apps = el("span", { class: "welcome-t welcome-t-apps", text: "Applications", "aria-hidden": "true" });
+  const apps = el("span", { class: "welcome-t welcome-t-apps", text: firstLaunch ? "New application" : "Applications", "aria-hidden": "true" });
   const title = el("h1", { class: "welcome-title", id: "welcome-title" }, [hello, apps]);
   const status = el("p", { class: "welcome-status", text: summaryText() });
   const cta = el("button", { class: "welcome-cta", type: "button" });
   cta.innerHTML =
-    '<svg width="20" height="12" viewBox="0 0 20 12" fill="none" aria-hidden="true"><path d="M2 10l8-8 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    '<svg viewBox="0 0 44 56" fill="none" aria-hidden="true"><path d="M4 30C14 24 21 14 23 3C26 14 33 24 41 30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 3C22 22 24 40 23 53" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>';
   cta.appendChild(el("span", { text: "Swipe up to start" }));
   const box = el("section", { class: "welcome", "aria-label": "Welcome" }, [title, status, cta]);
 
@@ -279,8 +294,10 @@ function createWelcome() {
     done = true;
     welcomeOpen = false;
     skipFade = true;
-    if (location.hash === "#applications") render();
-    else location.hash = "#applications";
+    const target = firstLaunch ? "#new" : "#applications";
+    firstLaunch = false;
+    markStarted();
+    location.hash = target;
   };
 
   const settle = (open) => {
@@ -352,6 +369,7 @@ function render() {
     view = listView();
   }
   if (!view) view = listView();
+  if (welcomeOpen && !location.hash && firstLaunch) view = newView();
   if (skipFade) view.classList.add("no-fade");
 
   const showWelcome = welcomeOpen && !location.hash;
