@@ -1,0 +1,384 @@
+/* Registered so the welcome animation can interpolate them */
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --n {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  color: var(--color-text-primary);
+  background: var(--color-bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- App shell (phone-sized on desktop, full screen on phones) ---------- */
+.app {
+  width: 390px;
+  height: min(844px, 100dvh);
+  background: var(--color-bg-screen);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (min-width: 431px) and (min-height: 700px) {
+  .app {
+    border-radius: 32px;
+    box-shadow: 0 0 0 1px var(--color-border-default), 0 24px 48px rgba(22, 24, 31, 0.12);
+  }
+}
+
+@media (max-width: 430px) {
+  .app {
+    width: 100%;
+    height: 100dvh;
+  }
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  animation: fade 200ms ease-out;
+}
+
+.view.no-fade {
+  animation: none;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---------- Header ---------- */
+.header {
+  background: var(--color-bg-brand);
+  color: var(--color-text-on-brand);
+  padding: 56px var(--spacing-lg) var(--spacing-lg);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: var(--text-title-size);
+  line-height: var(--text-title-line);
+  font-weight: 600;
+}
+
+.header h1:focus {
+  outline: none;
+}
+
+/* ---------- Content ---------- */
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--spacing-lg) var(--spacing-lg) max(var(--spacing-xl), env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* ---------- Job card ---------- */
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.card:hover {
+  border-color: var(--color-bg-brand);
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+  flex: 1;
+}
+
+.card-role {
+  font-weight: 600;
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+}
+
+.card-meta {
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Status chip ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card .chip {
+  align-self: center;
+}
+
+.chip-applied { background: var(--color-status-applied-bg); color: var(--color-status-applied-fg); }
+.chip-interview { background: var(--color-status-interview-bg); color: var(--color-status-interview-fg); }
+.chip-offer { background: var(--color-status-offer-bg); color: var(--color-status-offer-fg); }
+.chip-rejected { background: var(--color-status-rejected-bg); color: var(--color-status-rejected-fg); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: var(--color-bg-brand);
+  color: var(--color-text-on-brand);
+  border: 1px solid var(--color-bg-brand);
+}
+
+.btn-secondary {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+}
+
+.btn:hover { filter: brightness(0.96); }
+
+/* ---------- Form fields ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.field label {
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+  color: var(--color-text-secondary);
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  font: inherit;
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 44px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.field-error {
+  margin: 0;
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+  color: var(--color-status-rejected-fg);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--color-status-rejected-fg);
+}
+
+.detail-title {
+  margin: 0;
+  font-size: var(--text-heading-size);
+  line-height: var(--text-heading-line);
+  font-weight: 600;
+}
+
+.empty {
+  margin: var(--spacing-xl) 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Welcome cover ----------
+   --p goes from 0 (full screen) to 1 (the size of the list header).
+   --n is a temporary reduction used by the idle bounce. */
+.welcome {
+  --header-h: 106px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: calc(100% - var(--p) * (100% - var(--header-h)) - var(--n));
+  background: var(--color-bg-brand);
+  color: var(--color-text-on-brand);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+  padding: 56px var(--spacing-lg) 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: nudge 4.2s ease-in-out 1.4s infinite;
+}
+
+.welcome.dragging,
+.welcome.settling {
+  animation: none;
+}
+
+.welcome.dragging {
+  cursor: grabbing;
+}
+
+.welcome.settling {
+  transition: --p 0.6s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+@keyframes nudge {
+  0%, 30%, 100% { --n: 0px; }
+  9% { --n: 36px; }
+  18% { --n: 0px; }
+  23% { --n: 16px; }
+}
+
+.welcome-title {
+  margin: 0;
+  display: grid;
+  font-weight: 600;
+  font-size: calc(var(--text-title-size) + (1 - var(--p)) * 16px);
+  line-height: calc(var(--text-title-line) + (1 - var(--p)) * 18px);
+}
+
+.welcome-title:focus {
+  outline: none;
+}
+
+.welcome-t {
+  grid-area: 1 / 1;
+}
+
+.welcome-t-hello {
+  opacity: max(0, calc(1 - var(--p) * 2.5));
+}
+
+.welcome-t-apps {
+  opacity: max(0, calc(var(--p) * 2.5 - 1.5));
+}
+
+.welcome-status {
+  margin: var(--spacing-sm) 0 0;
+  opacity: max(0, calc(1 - var(--p) * 3));
+}
+
+.welcome-cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: none;
+  border: 0;
+  padding: var(--spacing-sm);
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-caption-size);
+  line-height: var(--text-caption-line);
+  cursor: pointer;
+  opacity: max(0, calc(1 - var(--p) * 3));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view { animation: none; }
+  .welcome { animation: none; }
+  .welcome.settling { transition: none; }
+}
+
+/* ---------- Focus ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-bg-brand);
+  outline-offset: 2px;
+}
+
+.welcome-cta:focus-visible {
+  outline-color: var(--color-text-on-brand);
+}
