@@ -1,4 +1,4 @@
-# Job Tracker (case study)
+# Personal Job Tracker (iPhone App) 
 
 Prototype of a personal job application tracker.
 Designed in Figma (design system with variables, components and 3 screens), then built in code with Claude Code.
